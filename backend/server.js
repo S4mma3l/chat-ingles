@@ -1,16 +1,19 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-    const corsOptions = {
-     origin: 'https://s4mma3l.github.io/chat-ingles/',
-     optionsSuccessStatus: 200
-    }
-    app.use(cors(corsOptions));
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const app = express();
+
+const app = express(); // Declarar 'app' antes de usarla
+
 const port = 3000;
- app.use(cors());
+
+const corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200
+}
+app.use(cors(corsOptions));  // Usar 'app' después de declararla
 app.use(express.json()); // Para procesar JSON en las peticiones
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -26,6 +29,7 @@ app.post('/gemini', async (req, res) => {
         res.status(500).json({ error: "Error al obtener la respuesta del modelo" });
     }
 });
+
 app.listen(port, () => {
     console.log(`Servidor en el puerto ${port}`);
 });
