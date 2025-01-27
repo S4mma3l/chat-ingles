@@ -19,6 +19,8 @@ let selectedVoice = null;
 let speechRate = 0.9;
 let currentUtterance = null;
 let isPaused = false;
+let isRecording = false;
+let recognition;
 
 // Función para obtener la voz predeterminada en ingles
 function getEnglishVoice() {
@@ -42,6 +44,13 @@ function loadVoices() {
 loadVoices().then(() => {
     selectedVoice = getEnglishVoice();
     console.log("Voces cargadas", selectedVoice);
+     // Solicitar permisos para acceder al micrófono al iniciar la aplicacion
+       if(navigator.mediaDevices){
+             navigator.mediaDevices.getUserMedia({ audio: true })
+            .catch( () => {
+               alert("No tienes permisos para usar el micrófono");
+             });
+       }
 });
 
 
@@ -201,45 +210,46 @@ textInput.addEventListener('keydown', async (event) => {
         }
     }
 });
-
-// Evento para el botón de entrada de voz
-voiceButton.addEventListener('click', () => {
-    if(currentUtterance) {
-        speechSynthesis.cancel();
-    }
-      // Verificar que el navegador soporta la API de reconocimiento de voz
-        if (!window.SpeechRecognition && !window.webkitSpeechRecognition && !navigator.mediaDevices) {
-            alert('Tu navegador no soporta el reconocimiento de voz.');
-           return;
-        }
-       // Solicitar permisos para acceder al micrófono en caso de no tener acceso
-        if(navigator.mediaDevices){
-             navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(() => {
-                initSpeechRecognition(); // Si el permiso esta concedido, iniciamos el reconocimiento de voz
-             })
-             .catch( () => {
-               alert("No tienes permisos para usar el micrófono");
-             })
-           } else {
-               initSpeechRecognition(); // si no esta mediaDevices, iniciamos el reconocimiento normalmente
-            }
-  
-     function initSpeechRecognition(){
-         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+function initSpeechRecognition(){
+         recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'es-ES';
-             recognition.start();
 
-             recognition.onresult = async (event) => {
-            const voiceText = event.results[0][0].transcript;
-            addMessage(voiceText); // Agregar mensaje de voz del usuario
-             const botResponse = await sendToGeminiAI(voiceText); // Obtener respuesta de Gemini
-             addMessage(botResponse, false); // Agregar respuesta del bot
+            recognition.onresult = async (event) => {
+              if(isRecording) {
+                isRecording = false;
+                const voiceText = event.results[0][0].transcript;
+                addMessage(voiceText); // Agregar mensaje de voz del usuario
+                const botResponse = await sendToGeminiAI(voiceText); // Obtener respuesta de Gemini
+                addMessage(botResponse, false); // Agregar respuesta del bot
+             }
         };
 
          recognition.onerror = () => {
             alert('No se pudo procesar el audio. Intenta de nuevo.'); // Notificar el error
          };
+     }
+
+
+// Evento para el botón de entrada de voz
+voiceButton.addEventListener('mousedown', () => {
+       if(currentUtterance) {
+            speechSynthesis.cancel();
+         }
+    // Verificar que el navegador soporta la API de reconocimiento de voz
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition && !navigator.mediaDevices) {
+        alert('Tu navegador no soporta el reconocimiento de voz.');
+        return;
+    }
+        if(!recognition){
+          initSpeechRecognition();
+         }
+    isRecording = true;
+   recognition.start();
+});
+
+voiceButton.addEventListener('mouseup', () => {
+  if(isRecording){
+       recognition.stop();
      }
 });
 
