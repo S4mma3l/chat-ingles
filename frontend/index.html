@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="chat-container">
+        <div class="message-area" id="message-area">
+            <!-- Los mensajes se agregarán dinámicamente aquí -->
+        </div>
+        <div class="input-area">
+            <input type="text" id="text-input" placeholder="Escribe tu mensaje...">
+            <button id="voice-input-btn" title="Hablar">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button id="send-btn" title="Enviar">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+           <button id="replay-btn" title="Replay">
+               <i class="fas fa-redo"></i>
+            </button>
+            <!-- Slider para controlar la velocidad de la voz -->
+            <input type="range" id="speed-slider" min="0.5" max="2" step="0.1" value="0.9" title="Velocidad de la voz">
+             <button id="pause-resume-btn" title="Pause/Resume">
+                <i class="fas fa-pause"></i>
+            </button>
+        </div>
+     <div id="loading-indicator" style="display: none;">Cargando...</div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
