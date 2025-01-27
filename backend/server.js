@@ -1,6 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+    const corsOptions = {
+     origin: 'https://s4mma3l.github.io/chat-ingles/',
+     optionsSuccessStatus: 200
+    }
+    app.use(cors(corsOptions));
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const app = express();
 const port = 3000;
