@@ -131,7 +131,7 @@ async function sendToGeminiAI(userInput) {
             ${formattedHistory}
             user: ${userInput}
         `;
-        const response = await fetch('chat-ingles.railway.internal', {
+        const response = await fetch('chat-ingles-production-ccfd.up.railway.app', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
