@@ -204,30 +204,45 @@ textInput.addEventListener('keydown', async (event) => {
 
 // Evento para el botón de entrada de voz
 voiceButton.addEventListener('click', () => {
-      if(currentUtterance) {
-            speechSynthesis.cancel();
-         }
-    // Verificar que el navegador soporta la API de reconocimiento de voz
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-        alert('Tu navegador no soporta el reconocimiento de voz.');
-        return;
+    if(currentUtterance) {
+        speechSynthesis.cancel();
     }
+      // Verificar que el navegador soporta la API de reconocimiento de voz
+        if (!window.SpeechRecognition && !window.webkitSpeechRecognition && !navigator.mediaDevices) {
+            alert('Tu navegador no soporta el reconocimiento de voz.');
+           return;
+        }
+       // Solicitar permisos para acceder al micrófono en caso de no tener acceso
+        if(navigator.mediaDevices){
+             navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(() => {
+                initSpeechRecognition(); // Si el permiso esta concedido, iniciamos el reconocimiento de voz
+             })
+             .catch( () => {
+               alert("No tienes permisos para usar el micrófono");
+             })
+           } else {
+               initSpeechRecognition(); // si no esta mediaDevices, iniciamos el reconocimiento normalmente
+            }
+  
+     function initSpeechRecognition(){
+         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'es-ES';
+             recognition.start();
 
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'es-ES';
-    recognition.start();
+             recognition.onresult = async (event) => {
+            const voiceText = event.results[0][0].transcript;
+            addMessage(voiceText); // Agregar mensaje de voz del usuario
+             const botResponse = await sendToGeminiAI(voiceText); // Obtener respuesta de Gemini
+             addMessage(botResponse, false); // Agregar respuesta del bot
+        };
 
-    recognition.onresult = async (event) => {
-        const voiceText = event.results[0][0].transcript;
-        addMessage(voiceText); // Agregar mensaje de voz del usuario
-        const botResponse = await sendToGeminiAI(voiceText); // Obtener respuesta de Gemini
-        addMessage(botResponse, false); // Agregar respuesta del bot
-    };
-
-    recognition.onerror = () => {
-        alert('No se pudo procesar el audio. Intenta de nuevo.'); // Notificar el error
-    };
+         recognition.onerror = () => {
+            alert('No se pudo procesar el audio. Intenta de nuevo.'); // Notificar el error
+         };
+     }
 });
+
 
 // Evento para el botón de replay
 replayButton.addEventListener('click', () => {

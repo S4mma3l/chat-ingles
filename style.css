@@ -6,6 +6,7 @@ body {
   align-items: center;
   height: 100vh;
   background: linear-gradient(to bottom, #F2EFE7, #9ACBD0, #48A6A7, #2973B2);
+  padding: 10px; /* Asegurar un poco de margen en bordes de pantalla */
 }
 
 .chat-container {
@@ -97,17 +98,28 @@ body {
   padding: 15px;
   background-color: #f0f0f0;
   border-top: 1px solid #e0e0e0;
+  flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea en pantallas pequeñas */
+  justify-content: center; /* Centrar los elementos en pantallas pequeñas */
 }
 
 #text-input {
-  flex-grow: 1;
+  flex: 1 1 100%; /* Ancho completo en pantallas pequeñas */
   padding: 12px 15px;
   border: 1px solid #e0e0e0;
   border-radius: 25px;
   font-size: 15px;
   outline: none;
   transition: border-color 0.2s;
+  margin-bottom: 10px; /* Espacio inferior en pantallas pequeñas */
+  
 }
+@media (min-width: 768px) {
+  #text-input {
+    flex: 1; /* Volver a flex normal en pantallas mas grandes */
+    margin-bottom: 0; /* Quitar margin en pantallas mas grandes */
+  }
+}
+
 
 #text-input:focus {
   border-color: #C4D9FF;
@@ -144,7 +156,19 @@ button i {
   margin-left: 0px;
 }
 
- #speed-slider {
-        margin-left: 10px; /* Agregar margen para separarlo de los botones */
-         width: 100px;
-     }
+#speed-slider {
+  margin-left: 10px;
+   width: 100px;
+
+}
+
+/* media queries para el responsive */
+@media (max-width: 768px) {
+  .chat-container {
+      height: 95%; /* Aumenta la altura en pantallas mas pequeñas */
+      max-width: 95%; /* Reduce el ancho máximo en pantallas mas pequeñas */
+  }
+  .message {
+     max-width: 90%; /* reduce el ancho maximo de los mensajes en pantallas pequeñas */
+  }
+}
