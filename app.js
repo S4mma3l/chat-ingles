@@ -79,18 +79,18 @@ function addMessage(content, isUser = true) {
       vocabularyWords.push({word, translation});
         return `<span class="vocabulary-word">${word}</span>`
        });
-    contentDiv.innerHTML = formattedContent;
+   contentDiv.innerHTML = formattedContent;
       if (vocabularyWords.length > 0) {
           const vocabularyContainer = document.createElement('div');
            vocabularyContainer.classList.add('vocabulary-container');
 
           vocabularyWords.forEach(({ word, translation }) => {
-           const bubble = document.createElement('span');
-          bubble.classList.add('vocabulary-bubble');
+          const bubble = document.createElement('span');
+           bubble.classList.add('vocabulary-bubble');
            bubble.innerHTML = `${word}<span class="translation">(${translation})</span>`;
-           vocabularyContainer.appendChild(bubble);
-            });
-          message.appendChild(vocabularyContainer);
+          vocabularyContainer.appendChild(bubble);
+           });
+        message.appendChild(vocabularyContainer); // Agrega el vocabulario al area de mensajes
       }
   }else{
        contentDiv.innerHTML = content;
@@ -141,7 +141,7 @@ async function sendToGeminiAI(userInput) {
 
   try {
     const formattedHistory = conversationHistory.map(msg => `${msg.role}: ${msg.content}`).join("\n");
-      const prompt = `
+    const prompt = `
             Traduce la siguiente frase al inglés y proporciona ejemplos de uso en diferentes tiempos verbales: '[inserta tu frase en español aquí]
             Traducciones precisas: Ofrece traducciones al inglés con sus matices y contextos de uso, indicando la más adecuada para contextos formales e informales
             Organiza tu respuesta de la siguiente manera:
@@ -149,9 +149,9 @@ async function sendToGeminiAI(userInput) {
             1.  Primero, proporciona la traducción directa del texto al inglés.<br/>
             2.  Luego, explica el tiempo verbal utilizado en la oración original.<br/>
             3.  Por último, ofrece ejemplos en diferentes tiempos verbales:<br/>
-            4.  El texto de la respuesta debe estar bien estructurado y organizado de manera clara y concisa.
-            5.  El texto siempre sera en ingles, no es necesario traducirlo.
-            
+            4.  El texto de la respuesta debe estar bien estructurado y organizado de manera clara y concisa.<br/>
+            5.  El texto siempre sera en ingles, no es necesario traducirlo.<br/>
+
             Simple Present: [ejemplo en presente]<br/>
             Present Continuous: [ejemplo en presente continuo]<br/>
             Simple Past: [ejemplo en pasado simple]<br/>
@@ -182,10 +182,10 @@ async function sendToGeminiAI(userInput) {
         }
         const data = await response.json();
         let responseText = data.response;
-         responseText = responseText.replace(/\*/g, '');
-        responseText = responseText.replace(/  +/g, ' ');
+        responseText = responseText.replace(/\*/g, '');
+         responseText = responseText.replace(/  +/g, ' ');
         const lines = responseText.trim().split('\n');
-         const formattedText = lines.map(line => `<p>${line.trim()}</p>`).join('');
+        const formattedText = lines.map(line => `<p>${line.trim()}</p>`).join('');
         return formattedText;
        
     } catch (error) {

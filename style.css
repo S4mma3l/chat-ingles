@@ -153,17 +153,17 @@ background-color: #f0f0f0;
 transform: scale(1.05);
 }
 #send-btn {
-  background-color: #007bff;
+  background-color: #007bff; /* destacar el boton de enviar */
 }
 #send-btn:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* destacar el boton de enviar al pasar el cursor */
 }
 #send-btn i {
-  color: white;
+  color: white; /* Cambia el color del icono a blanco para el boton de enviar*/
 }
 button:active{
-  transform: scale(0.95);
-  background-color: #e0e0e0;
+  transform: scale(0.95); /* Dar una pequeña animacion al presionar el boton */
+  background-color: #e0e0e0; /* Agregar un color al presionar el boton */
 }
 
 button i {
@@ -214,14 +214,20 @@ margin-left: 10px;
 }
 
 /* media queries para el responsive */
-@media (max-width: 768px) {
+@media (max-width: 768px) and (orientation: portrait) {
   .chat-container {
-      height: 95%;
-      max-width: 95%;
-  }
-  .message {
-     max-width: 90%;
-  }
+     height: 95%;
+      max-width: 95%; /* Reducir el ancho máximo */
+      font-size: 0.9em; /* Reducir el tamaño del texto */
+   }
+.bot-message .content {
+      max-width: 80%;
+       line-height: 1.5; /* aumentar el espacio entre lineas */
+}
+ .vocabulary-container {
+  max-width: 90%; /* ajuste al ancho del contenedor de vocabulario */
+}
+
 }
 /* Estilos para la animación de onda */
 .wave-container {
@@ -294,7 +300,7 @@ margin-left: 10px;
   font-size: 0.9em;
 }
 .vocabulary-bubble .translation {
-color: #406A3E; /* Color de la traducción */
+color: #406A3E;
 margin-left: 5px;
 }
 
