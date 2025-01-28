@@ -6,6 +6,8 @@ const voiceButton = document.getElementById('voice-input-btn');
 const replayButton = document.getElementById('replay-btn');
 const speedSlider = document.getElementById('speed-slider');
 const pauseResumeButton = document.getElementById('pause-resume-btn');
+const waveContainer = document.getElementById('wave-container');
+const loadingIndicator = document.getElementById('loading-indicator');
 
 // Variable para rastrear el estado de carga
 let isLoading = false;
@@ -21,6 +23,8 @@ let currentUtterance = null;
 let isPaused = false;
 let isRecording = false;
 let recognition;
+let transcription = '';
+
 
 // Función para obtener la voz predeterminada en ingles
 function getEnglishVoice() {
@@ -171,12 +175,12 @@ async function sendToGeminiAI(userInput) {
 
 // Función para mostrar el indicador de carga
 function showLoadingIndicator() {
-    document.getElementById('loading-indicator').style.display = 'block';
+      loadingIndicator.style.display = 'flex';
 }
 
 // Función para ocultar el indicador de carga
 function hideLoadingIndicator() {
-    document.getElementById('loading-indicator').style.display = 'none';
+    loadingIndicator.style.display = 'none';
 }
 
 
@@ -213,15 +217,23 @@ textInput.addEventListener('keydown', async (event) => {
 function initSpeechRecognition(){
          recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'es-ES';
+            recognition.interimResults = true;
 
-            recognition.onresult = async (event) => {
-              if(isRecording) {
-                isRecording = false;
-                const voiceText = event.results[0][0].transcript;
-                addMessage(voiceText); // Agregar mensaje de voz del usuario
-                const botResponse = await sendToGeminiAI(voiceText); // Obtener respuesta de Gemini
-                addMessage(botResponse, false); // Agregar respuesta del bot
-             }
+             recognition.onresult = async (event) => {
+                 let currentTranscript = "";
+              for (let i = event.resultIndex; i < event.results.length; i++) {
+                 currentTranscript += event.results[i][0].transcript;
+                  if(event.results[i].isFinal){
+                        transcription = currentTranscript
+                            addMessage(currentTranscript);
+                           const botResponse = await sendToGeminiAI(currentTranscript);
+                            addMessage(botResponse, false);
+                             transcription = '';
+                       } else {
+                         addMessage(currentTranscript, true) // Muestra el texto en tiempo real
+                        }
+                   }
+            
         };
 
          recognition.onerror = () => {
@@ -243,13 +255,19 @@ voiceButton.addEventListener('mousedown', () => {
         if(!recognition){
           initSpeechRecognition();
          }
+         transcription = '' // Reset the transcription
     isRecording = true;
+    voiceButton.classList.add('recording')
+     waveContainer.classList.add('recording');
    recognition.start();
 });
 
 voiceButton.addEventListener('mouseup', () => {
   if(isRecording){
        recognition.stop();
+         isRecording = false;
+         voiceButton.classList.remove('recording')
+          waveContainer.classList.remove('recording');
      }
 });
 

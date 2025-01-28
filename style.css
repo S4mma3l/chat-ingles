@@ -6,7 +6,7 @@ body {
   align-items: center;
   height: 100vh;
   background: linear-gradient(to bottom, #F2EFE7, #9ACBD0, #48A6A7, #2973B2);
-  padding: 10px; /* Asegurar un poco de margen en bordes de pantalla */
+  padding: 10px;
 }
 
 .chat-container {
@@ -76,10 +76,10 @@ body {
 }
 
 .user-message .avatar {
-  background-color: #000957;
-  color: white;
-  margin-left: 10px;
-  margin-right: 0px;
+background-color: #000957;
+color: white;
+margin-left: 10px;
+margin-right: 0px;
 }
 
 .bot-message .avatar {
@@ -88,8 +88,8 @@ body {
 }
 
 .message .content {
-  flex: 1;
-  word-wrap: break-word;
+flex: 1;
+word-wrap: break-word;
 }
 
 .input-area {
@@ -98,77 +98,163 @@ body {
   padding: 15px;
   background-color: #f0f0f0;
   border-top: 1px solid #e0e0e0;
-  flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea en pantallas pequeñas */
-  justify-content: center; /* Centrar los elementos en pantallas pequeñas */
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
 }
 
 #text-input {
-  flex: 1 1 100%; /* Ancho completo en pantallas pequeñas */
+  flex: 1 1 100%;
   padding: 12px 15px;
   border: 1px solid #e0e0e0;
   border-radius: 25px;
   font-size: 15px;
   outline: none;
   transition: border-color 0.2s;
-  margin-bottom: 10px; /* Espacio inferior en pantallas pequeñas */
-  
-}
-@media (min-width: 768px) {
-  #text-input {
-    flex: 1; /* Volver a flex normal en pantallas mas grandes */
-    margin-bottom: 0; /* Quitar margin en pantallas mas grandes */
-  }
+  margin-bottom: 10px;
 }
 
+@media (min-width: 768px) {
+#text-input {
+  flex: 1;
+  margin-bottom: 0;
+}
+}
 
 #text-input:focus {
-  border-color: #C4D9FF;
+border-color: #C4D9FF;
 }
 
 button {
-  background-color: #fafafa;
-  border: 1px solid #e0e0e0;
-  border-radius: 50%;
-  margin-left: 10px;
-  padding: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+background-color: #fafafa;
+border: 1px solid #e0e0e0;
+border-radius: 50%;
+margin-left: 10px;
+padding: 10px;
+cursor: pointer;
+transition: background-color 0.3s, transform 0.2s;
 }
 
 button:hover {
-  background-color: #f0f0f0;
-  transform: scale(1.05);
+background-color: #f0f0f0;
+transform: scale(1.05);
 }
 
 button i {
-  color: #4635B1;
-  font-size: 18px;
+color: #4635B1;
+font-size: 18px;
+}
+#loading-indicator {
+  display: none;
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loading-spinner {
+  display: inline-flex;
 }
 
-#loading-indicator {
-  text-align: center;
-  padding: 10px;
-  font-style: italic;
-  display: none;
+.loading-circle {
+  width: 12px;
+  height: 12px;
+  background-color: #4635B1;
+  border-radius: 50%;
+  margin: 0 5px;
+  animation: loading-animation 1.2s ease-in-out infinite;
 }
+.loading-circle:nth-child(2) {
+   animation-delay: 0.4s;
+}
+.loading-circle:nth-child(3) {
+   animation-delay: 0.8s;
+}
+
+@keyframes loading-animation {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(15px); }
+  100% { transform: translateX(0); }
+}
+
 
 #replay-btn {
-  margin-left: 0px;
+margin-left: 0px;
 }
 
 #speed-slider {
-  margin-left: 10px;
-   width: 100px;
-
+margin-left: 10px;
+ width: 100px;
 }
 
 /* media queries para el responsive */
 @media (max-width: 768px) {
   .chat-container {
-      height: 95%; /* Aumenta la altura en pantallas mas pequeñas */
-      max-width: 95%; /* Reduce el ancho máximo en pantallas mas pequeñas */
+      height: 95%;
+      max-width: 95%;
   }
   .message {
-     max-width: 90%; /* reduce el ancho maximo de los mensajes en pantallas pequeñas */
+     max-width: 90%;
+  }
+}
+/* Estilos para la animación de onda */
+.wave-container {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none; /* Inicialmente oculto */
+}
+
+.wave {
+  position: absolute;
+  border: 2px solid #4635B1;
+  border-radius: 50%;
+  opacity: 0;
+  animation: wave-animation 2s linear infinite;
+}
+
+.wave1 {
+  width: 40px;
+  height: 40px;
+}
+
+.wave2 {
+  width: 60px;
+  height: 60px;
+  animation-delay: 0.5s;
+}
+
+.wave3 {
+  width: 80px;
+  height: 80px;
+  animation-delay: 1s;
+}
+
+@keyframes wave-animation {
+  0% {
+      transform: scale(0.8);
+      opacity: 1;
+  }
+  100% {
+      transform: scale(1.2);
+      opacity: 0;
+  }
+}
+.recording .wave-container {
+  display: block; /* Mostrar el elemento cuando se este grabando*/
+}
+
+/* Estilos para el botón del microfono */
+#voice-input-btn.recording i {
+  animation: microphone-animation 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes microphone-animation {
+  from {
+      transform: scale(1);
+  }
+  to {
+      transform: scale(1.2);
   }
 }
