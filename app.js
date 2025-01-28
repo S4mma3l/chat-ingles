@@ -167,7 +167,7 @@ async function sendToGeminiAI(userInput) {
     } catch (error) {
         console.error('Error al comunicarse con Gemini AI:', error);
         return 'Lo siento, hubo un problema al procesar tu solicitud.';
-    } finally {
+        } finally {
         hideLoadingIndicator(); // Ocultar indicador de carga
         isLoading = false; // Reiniciar el estado de carga
     }
