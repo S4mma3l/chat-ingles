@@ -112,10 +112,10 @@ word-wrap: break-word;
   outline: none;
   transition: border-color 0.2s;
   margin-bottom: 10px;
-  color: #333; /* Increased contrast for the placeholder text*/
+  color: #333;
 }
 #text-input::placeholder {
-  color: #666; /* Increased contrast for the placeholder text*/
+  color: #666;
 }
 
 @media (min-width: 768px) {
@@ -153,17 +153,17 @@ background-color: #f0f0f0;
 transform: scale(1.05);
 }
 #send-btn {
-  background-color: #007bff; /* destacar el boton de enviar */
+  background-color: #007bff;
 }
 #send-btn:hover {
-  background-color: #0056b3; /* destacar el boton de enviar al pasar el cursor */
+  background-color: #0056b3;
 }
 #send-btn i {
-  color: white; /* Cambia el color del icono a blanco para el boton de enviar*/
+  color: white;
 }
 button:active{
-  transform: scale(0.95); /* Dar una pequeña animacion al presionar el boton */
-  background-color: #e0e0e0; /* Agregar un color al presionar el boton */
+  transform: scale(0.95);
+  background-color: #e0e0e0;
 }
 
 button i {
