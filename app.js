@@ -60,27 +60,50 @@ loadVoices().then(() => {
 
 // Función para agregar mensajes al área de mensajes
 function addMessage(content, isUser = true) {
-    const message = document.createElement('div');
-    message.classList.add('message', isUser ? 'user-message' : 'bot-message');
+  const message = document.createElement('div');
+  message.classList.add('message', isUser ? 'user-message' : 'bot-message');
 
-    // Agregar el avatar
-    const avatar = document.createElement('div');
-    avatar.classList.add('avatar');
-    avatar.textContent = isUser ? 'U' : 'B';
+  // Agregar el avatar
+  const avatar = document.createElement('div');
+  avatar.classList.add('avatar');
+  avatar.textContent = isUser ? 'U' : 'B';
 
-    // Contenedor del contenido del mensaje
-    const contentDiv = document.createElement('div');
-    contentDiv.classList.add('content');
-    
-    contentDiv.innerHTML = content;
-    
-    // Colocar el avatar a la izquierda si es mensaje del bot, a la derecha si es del usuario
-    message.appendChild(isUser ? contentDiv : avatar);
-    message.appendChild(isUser ? avatar : contentDiv);
+  // Contenedor del contenido del mensaje
+  const contentDiv = document.createElement('div');
+  contentDiv.classList.add('content');
 
-    messageArea.appendChild(message); // Agrega el mensaje al area de mensajes
-    messageArea.scrollTop = messageArea.scrollHeight; // Hace scroll hasta el final
-    conversationHistory.push({ role: isUser ? 'user' : 'model', content }); // Agrega el mensaje al historial
+  // Añadir vocabulario si es respuesta del bot
+  if (!isUser) {
+     const vocabularyWords = [];
+      const formattedContent = content.replace(/\[(.*?)\]\((.*?)\)/g, (match, word, translation) => {
+      vocabularyWords.push({word, translation});
+      return `<span class="vocabulary-word">${word}</span>`
+       });
+   contentDiv.innerHTML = formattedContent;
+      if (vocabularyWords.length > 0) {
+          const vocabularyContainer = document.createElement('div');
+           vocabularyContainer.classList.add('vocabulary-container');
+
+          vocabularyWords.forEach(({ word, translation }) => {
+          const bubble = document.createElement('span');
+           bubble.classList.add('vocabulary-bubble');
+           bubble.innerHTML = `${word}<span class="translation">(${translation})</span>`;
+          vocabularyContainer.appendChild(bubble);
+           });
+        message.appendChild(vocabularyContainer); // Agrega el vocabulario al area de mensajes
+      }
+  }else{
+       contentDiv.innerHTML = content;
+    }
+
+  // Colocar el avatar a la izquierda si es mensaje del bot, a la derecha si es del usuario
+  message.appendChild(isUser ? contentDiv : avatar);
+  message.appendChild(isUser ? avatar : contentDiv);
+
+
+  messageArea.appendChild(message); // Agrega el mensaje al area de mensajes
+  messageArea.scrollTop = messageArea.scrollHeight; // Hace scroll hasta el final
+  conversationHistory.push({ role: isUser ? 'user' : 'model', content }); // Agrega el mensaje al historial
 
    if (!isUser) {
          const textContent = contentDiv.textContent || contentDiv.innerText;
@@ -138,7 +161,7 @@ async function sendToGeminiAI(userInput) {
             Past Perfect: [ejemplo en pasado perfecto]<br/>
             Past Perfect Continuous: [ejemplo en pasado perfecto continuo]<br/>
 
-            4.  No uses asteriscos (*) ni ningún otro caracter especial.
+            4.  No uses asteriscos (*) ni ningún otro caracter especial, y  encierra en corchetes las palabras de vocabulario que consideres relevantes, e incluye su traducción entre parentesis despues de cada palabra. Ejemplo: [example](ejemplo), [words](palabras).
          
             Historial de Conversación:
             ${formattedHistory}
@@ -157,17 +180,16 @@ async function sendToGeminiAI(userInput) {
         }
         const data = await response.json();
         let responseText = data.response;
-         responseText = responseText.replace(/\*/g, ''); // Elimina asteriscos
-         responseText = responseText.replace(/  +/g, ' '); // Elimina dobles espacios
-
-         const lines = responseText.trim().split('\n'); // Divide el texto en lineas
-            const formattedText = lines.map(line => `<p>${line.trim()}</p>`).join(''); //  Crea parrafos
+        responseText = responseText.replace(/\*/g, '');
+         responseText = responseText.replace(/  +/g, ' ');
+        const lines = responseText.trim().split('\n');
+        const formattedText = lines.map(line => `<p>${line.trim()}</p>`).join('');
         return formattedText;
        
     } catch (error) {
         console.error('Error al comunicarse con Gemini AI:', error);
         return 'Lo siento, hubo un problema al procesar tu solicitud.';
-        } finally {
+    } finally {
         hideLoadingIndicator(); // Ocultar indicador de carga
         isLoading = false; // Reiniciar el estado de carga
     }

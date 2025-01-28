@@ -100,7 +100,7 @@ word-wrap: break-word;
   border-top: 1px solid #e0e0e0;
   flex-wrap: wrap;
   justify-content: center;
- position: relative; /* Make input-area relative to the wave container */
+  position: relative;
 }
 
 #text-input {
@@ -127,25 +127,25 @@ word-wrap: break-word;
 
 #text-input:focus {
   border-color: #C4D9FF;
-  box-shadow: 0 0 10px #C4D9FF; /* Add a subtle box shadow */
-  text-shadow: 0 0 5px #C4D9FF; /* Add a text shadow */
-  color: #C4D9FF;
+  box-shadow: 0 0 10px #C4D9FF;
+  text-shadow: 0 0 5px #F8E7F6;
+  color: #09122C;
 }
 
 button {
 background-color: #fafafa;
 border: 1px solid #e0e0e0;
   border-radius: 50%;
-  margin-left: 5px; /* reduce the margin*/
-margin-right: 5px;/* reduce the margin*/
-padding: 10px;
-  width: 40px;  /* Increase button width */
-  height: 40px;  /* Increase button height*/
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 10px;
+  width: 40px;
+  height: 40px;
 cursor: pointer;
 transition: background-color 0.3s, transform 0.2s;
-  display: inline-flex; /* Add flex display */
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button:hover {
@@ -283,4 +283,23 @@ margin-left: 10px;
   to {
       transform: scale(1.2);
   }
+}
+.vocabulary-bubble {
+  background-color: #d4edda;
+  color: #155B46;
+  border-radius: 15px;
+   padding: 5px 10px;
+  margin: 2px 5px;
+   display: inline-block;
+  font-size: 0.9em;
+}
+.vocabulary-bubble .translation {
+color: #406A3E; /* Color de la traducción */
+margin-left: 5px;
+}
+
+.vocabulary-container {
+display: flex;
+  flex-direction: column;
+  max-width: 200px;
 }
